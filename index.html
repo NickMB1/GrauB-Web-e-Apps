@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConselhoDash — Painel de Conselhos</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!-- Nicolas Minato Bellver e João Luca Benicio — Jogos Digitais, 2º semestre — 2026 -->
+
+<header class="cabecalho">
+  <h1>ConselhoDash</h1>
+  <p class="subtitulo">Conselhos do dia, busca na API e seus favoritos pessoais</p>
+  <nav class="menu-principal" aria-label="Navegação principal">
+    <ul>
+      <li><a href="#painel">Painel</a></li>
+      <li><a href="#conselhos">Conselhos</a></li>
+      <li><a href="#favoritos">Meus Favoritos</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div id="area-mensagens" class="area-mensagens" role="status" aria-live="polite"></div>
+
+  <section id="painel" aria-labelledby="titulo-painel">
+    <h2 id="titulo-painel">Painel</h2>
+    <p>Indicadores calculados a partir dos conselhos que você salvou como favoritos.</p>
+
+    <div id="cartoes-indicadores" class="grade-cartoes"></div>
+
+    <div class="grade-graficos">
+      <article class="cartao">
+        <h3>Distribuição por nota</h3>
+        <div id="grafico-notas" class="lista-barras"></div>
+      </article>
+      <article class="cartao">
+        <h3>Distribuição por categoria</h3>
+        <div id="grafico-categorias" class="lista-barras"></div>
+      </article>
+    </div>
+
+    <aside class="cartao" aria-labelledby="titulo-como-funciona">
+      <h3 id="titulo-como-funciona">Como funciona essa coleção</h3>
+      <p>
+        A Advice Slip API só permite leitura (GET), então o CRUD deste painel acontece sobre a sua
+        própria coleção de favoritos. Os conselhos continuam vindo da API; a categoria, a nota e a
+        nota pessoal de cada favorito ficam salvas só neste navegador, no <code>localStorage</code>.
+      </p>
+    </aside>
+  </section>
+
+  <section id="conselhos" aria-labelledby="titulo-conselhos">
+    <h2 id="titulo-conselhos">Conselhos</h2>
+
+    <article class="cartao destaque">
+      <h3>Conselho do dia</h3>
+      <p id="texto-conselho-do-dia">Carregando…</p>
+      <div class="acoes-cartao">
+        <button type="button" id="botao-novo-conselho">Novo conselho aleatório</button>
+        <button type="button" id="botao-salvar-conselho-do-dia">Salvar como favorito</button>
+      </div>
+    </article>
+
+    <form id="form-busca-api" class="formulario-linha">
+      <fieldset>
+        <legend>Buscar conselhos na API por palavra-chave</legend>
+        <label for="campo-busca-api">Palavra-chave</label>
+        <input type="text" id="campo-busca-api" name="termo" placeholder="ex: work, money, life" required minlength="2">
+        <button type="submit" id="botao-busca-api">Buscar na API</button>
+      </fieldset>
+    </form>
+    <p id="status-busca-api" class="texto-status"></p>
+
+    <h3>Sugestões do dia</h3>
+    <div id="lista-sugestoes" class="grade-cartoes" aria-live="polite"></div>
+  </section>
+
+  <section id="favoritos" aria-labelledby="titulo-favoritos">
+    <h2 id="titulo-favoritos">Meus Favoritos</h2>
+
+    <form id="form-favorito" class="formulario-favorito">
+      <fieldset>
+        <legend id="legenda-form-favorito">Salvar conselho como favorito</legend>
+
+        <label for="campo-texto-favorito">Conselho selecionado</label>
+        <textarea id="campo-texto-favorito" name="texto" readonly rows="2" placeholder="Clique em “Salvar como favorito” em algum conselho acima"></textarea>
+        <small class="erro-campo" id="erro-texto-favorito"></small>
+
+        <label for="campo-categoria">Categoria</label>
+        <select id="campo-categoria" name="categoria" required>
+          <option value="">Selecione…</option>
+        </select>
+        <small class="erro-campo" id="erro-categoria"></small>
+
+        <label for="campo-nota">Nota (1 a 5)</label>
+        <select id="campo-nota" name="nota" required>
+          <option value="">Selecione…</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <small class="erro-campo" id="erro-nota"></small>
+
+        <label for="campo-nota-pessoal">Por que esse conselho importa pra você?</label>
+        <textarea id="campo-nota-pessoal" name="notaPessoal" rows="3"></textarea>
+        <small class="erro-campo" id="erro-nota-pessoal"></small>
+
+        <div class="acoes-formulario">
+          <button type="submit" id="botao-salvar-favorito">Salvar favorito</button>
+          <button type="button" id="botao-cancelar-edicao" hidden>Cancelar edição</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <form id="form-filtros-favoritos" class="formulario-linha">
+      <fieldset>
+        <legend>Buscar e filtrar seus favoritos</legend>
+
+        <label for="campo-busca-favoritos">Buscar</label>
+        <input type="text" id="campo-busca-favoritos" name="busca" placeholder="texto do conselho ou da sua nota">
+
+        <label for="filtro-categoria">Categoria</label>
+        <select id="filtro-categoria" name="categoria">
+          <option value="">Todas</option>
+        </select>
+
+        <label for="ordenar-favoritos">Ordenar por</label>
+        <select id="ordenar-favoritos" name="ordenar">
+          <option value="recente">Mais recentes</option>
+          <option value="nota-desc">Maior nota</option>
+          <option value="nota-asc">Menor nota</option>
+          <option value="categoria">Categoria (A-Z)</option>
+        </select>
+      </fieldset>
+    </form>
+
+    <div class="tabela-wrapper">
+      <table id="tabela-favoritos">
+        <caption>Seus conselhos favoritos</caption>
+        <thead>
+          <tr>
+            <th scope="col">Conselho</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Sua nota pessoal</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela-favoritos"></tbody>
+      </table>
+    </div>
+
+    <div class="paginacao" id="paginacao-favoritos"></div>
+  </section>
+</main>
+
+<footer class="rodape">
+  <p>ConselhoDash — Trabalho Final de Desenvolvimento Web</p>
+  <p>Nicolas Minato Bellver e João Luca Benicio — Jogos Digitais, 2º semestre — 2026</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/api/ApiError.js"></script>
+<script src="js/api/AdviceApi.js"></script>
+<script src="js/modelo/Advice.js"></script>
+<script src="js/modelo/FavoriteAdvice.js"></script>
+<script src="js/servicos/AdviceService.js"></script>
+<script src="js/servicos/FavoritesService.js"></script>
+<script src="js/ui/mensagens.js"></script>
+<script src="js/ui/dashboardView.js"></script>
+<script src="js/ui/feedView.js"></script>
+<script src="js/ui/favoritesView.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

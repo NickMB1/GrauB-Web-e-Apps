@@ -1,0 +1,8 @@
+Coloque aqui as 3 capturas de tela pedidas no enunciado antes de compactar o projeto:
+
+1. painel-desktop.png   -> painel aberto numa tela larga (ex: 1366px)
+2. painel-celular.png   -> painel aberto em 390px de largura (modo dispositivo do Chrome)
+3. formulario-erros.png -> formulário "Salvar conselho como favorito" enviado vazio,
+                           mostrando as mensagens de erro embaixo dos campos
+
+Depois de adicionar as imagens, pode apagar este arquivo.
